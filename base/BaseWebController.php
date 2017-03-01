@@ -7,6 +7,32 @@ use yii\web\Controller;
  */
 abstract class BaseWebController extends Controller {
 	/**
+	 * 定义一些模板中要使用的常量
+	 */
+	private function defineStatics() {
+		defined('STATIC_URL') or define('STATIC_URL', \Yii::$app->urlManager->baseUrl.'/static');
+		defined('DASHGUM_STATIC_URL') or define('DASHGUM_STATIC_URL', STATIC_URL.'/dashgum');
+		defined('DASHGUM_CSS_STATIC_URL') or define('DASHGUM_CSS_STATIC_URL', DASHGUM_STATIC_URL.'/css');
+		defined('DASHGUM_JS_STATIC_URL') or define('DASHGUM_JS_STATIC_URL', DASHGUM_STATIC_URL.'/js');
+		defined('DASHGUM_IMG_STATIC_URL') or define('DASHGUM_IMG_STATIC_URL', DASHGUM_STATIC_URL.'/img');
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see \yii\base\Controller::renderPartial()
+	 */
+	public function renderPartial($view, $params = []) {
+		$this->defineStatics();
+		return parent::renderPartial($view, $params);
+	}
+	
+	
+	public function render($view, $params = []) {
+		$this->defineStatics();
+		return parent::render($view, $params);
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 * @see \yii\base\Component::behaviors()
 	 */
