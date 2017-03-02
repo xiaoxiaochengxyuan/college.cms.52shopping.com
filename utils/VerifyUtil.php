@@ -103,6 +103,7 @@ class VerifyUtil {
     public static function checkVerify($verify) {
         $verify = strtolower($verify);
         $verify = sha1($verify);
+        var_dump(\Yii::$app->request->cookies->getValue(self::VERIFYKEY));exit();
         return $verify == \Yii::$app->request->cookies->getValue(self::VERIFYKEY);
     }
 }

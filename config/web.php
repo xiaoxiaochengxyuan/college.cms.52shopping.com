@@ -8,7 +8,7 @@ $config = [
     'name' => '52scshopping大学管理员后台系统',
     'components' => [
         'request' => [
-            'cookieValidationKey' => 'cfda40a3d3a1073d7e77281f336fa41ef68d69b5',
+            'cookieValidationKey' => '823aa17f84aaa716c98f151da13b51dd',
         ],
 //         'errorHandler' => [
 //             'errorAction' => 'site/error',

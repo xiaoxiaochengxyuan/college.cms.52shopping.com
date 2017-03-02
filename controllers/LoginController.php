@@ -13,6 +13,13 @@ class LoginController extends BaseWebController {
 	public function actionIndex() {
 		$collegeAdminForm = new CollegeAdminForm();
 		$collegeAdminForm->setScenario('login');
+		if (\Yii::$app->request->getIsPost()) {
+			$post = \Yii::$app->request->post('CollegeAdminForm');
+			$collegeAdminForm->setAttributes($post, false);
+			if ($collegeAdminForm->validate()) {
+				$this->redirect(['/']);
+			}
+		}
 		return $this->renderPartial('index', ['collegeAdminForm' => $collegeAdminForm]);
 	}
 }
