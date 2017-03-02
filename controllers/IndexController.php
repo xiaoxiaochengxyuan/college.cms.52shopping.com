@@ -10,6 +10,7 @@ class IndexController extends BaseWebController {
 	 * 首页控制器
 	 */
 	public function actionIndex() {
-		
+		$this->view->title = '首页';
+		return $this->render('index');
 	}
 }

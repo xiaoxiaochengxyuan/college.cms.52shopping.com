@@ -11,7 +11,7 @@ class VerifyUtil {
      * 验证码在cookie中的key
      * @var string
      */
-    const VERIFYKEY = 'verify_code_session_key';
+    const VERIFYKEY = 'verify_code_cookie_key';
     /**
      * 随机因子
      * @var string
@@ -32,8 +32,10 @@ class VerifyUtil {
         $img = self::createLine($img, $imageWidth, $imageHeight);
         $font = __DIR__.DIRECTORY_SEPARATOR.'IMPACT.TTF';
         $img = self::createFont($img, $font, $fontsize, $code, $imageWidth, $imageHeight, $length);
-        $cookie = new Cookie(['name' => self::VERIFYKEY, 'value' => sha1($code)]);
-        \Yii::$app->response->cookies->add($cookie);
+        $cookie = new Cookie();
+        $cookie->name = self::VERIFYKEY;
+        $cookie->value = md5($code);
+        \Yii::$app->response->getCookies()->add($cookie);
         header('Content-type:image/png');
         imagepng($img);
         imagedestroy($img);
@@ -102,7 +104,7 @@ class VerifyUtil {
      */
     public static function checkVerify($verify) {
         $verify = strtolower($verify);
-        $verify = sha1($verify);
-        return $verify == \Yii::$app->request->cookies->getValue(self::VERIFYKEY);
+        $verify = md5($verify);
+        return $verify == \Yii::$app->request->getCookies()->getValue(self::VERIFYKEY);
     }
 }

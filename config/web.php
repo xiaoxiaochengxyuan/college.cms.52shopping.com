@@ -1,7 +1,7 @@
 <?php
 $params = require(__DIR__ . '/params.php');
 $config = [
-    'id' => 'cms.52shopping.com',
+    'id' => 'college.cms.52scshopping.com',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'defaultRoute' => 'index',
