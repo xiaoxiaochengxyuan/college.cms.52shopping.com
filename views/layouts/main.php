@@ -1,6 +1,7 @@
 <?php
 use app\widgets\NavWidget;
 use yii\base\Widget;
+use app\daos\College;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +54,7 @@ use yii\base\Widget;
 						data-original-title="Toggle Navigation"></div>
 				</div>
 				<!--logo start-->
-				<a href="index.html" class="logo"><b>大学管理系统</b></a>
+				<a href="<?=Yii::$app->getUrlManager()->createUrl(['/'])?>" class="logo"><b>大学管理系统</b></a>
 				<!--logo end-->
 				<div class="nav notify-row" id="top_menu">
 					<!--  notification start -->
@@ -72,7 +73,7 @@ use yii\base\Widget;
 								<li>
 									<a href="index.html#">
 										<span class="photo">
-											<img alt="avatar" src="assets/img/ui-zac.jpg">
+											<img alt="avatar" src="<?=DASHGUM_IMG_STATIC_URL?>/ui-zac.jpg">
 										</span>
 										<span class="subject">
 											<span class="from">Zac Snider</span>
@@ -84,7 +85,7 @@ use yii\base\Widget;
 								<li>
 									<a href="index.html#">
 										<span class="photo">
-											<img alt="avatar" src="assets/img/ui-divya.jpg">
+											<img alt="avatar" src="<?=DASHGUM_IMG_STATIC_URL?>/ui-divya.jpg">
 										</span>
 										<span class="subject">
 											<span class="from">Divya Manian</span>
@@ -96,7 +97,7 @@ use yii\base\Widget;
 								<li>
 									<a href="index.html#">
 										<span class="photo">
-											<img alt="avatar" src="assets/img/ui-danro.jpg">
+											<img alt="avatar" src="<?=DASHGUM_IMG_STATIC_URL?>/ui-danro.jpg">
 										</span>
 										<span class="subject">
 											<span class="from">Dan Rogers</span>
@@ -108,7 +109,7 @@ use yii\base\Widget;
 								<li>
 									<a href="index.html#">
 										<span class="photo">
-											<img alt="avatar" src="assets/img/ui-sherman.jpg">
+											<img alt="avatar" src="<?=DASHGUM_IMG_STATIC_URL?>/ui-sherman.jpg">
 										</span>
 										<span class="subject">
 											<span class="from">Dj Sherman</span>
@@ -132,7 +133,7 @@ use yii\base\Widget;
 				
 				<div class="top-menu">
 					<ul class="nav pull-right top-menu">
-						<li><a class="logout" href="login.html">修改密码</a></li>
+						<li><a class="logout" href="<?=Yii::$app->urlManager->createUrl(['/college-admin/chgpasswd'])?>">修改密码</a></li>
 					</ul>
 				</div>
 			</header>
@@ -145,13 +146,14 @@ use yii\base\Widget;
 								<img src="<?=DASHGUM_IMG_STATIC_URL?>/ui-sam.jpg" class="img-circle" width="60">
 							</a>
 						</p>
-						<h5 class="centered">大学管理系统</h5>
+						<h5 class="centered"><?=College::instance()->getCurrentLoginCollege('name')?></h5>
 						<?=NavWidget::widget(['view' => $this])?>
 					</ul>
 				</div>
 			</aside>
 			<section id="main-content">
 				<section class="wrapper">
+					<h3><i class="fa fa-angle-right"></i> <?=$this->title?></h3>
 					<?=$content?>
 				</section>
 			</section>

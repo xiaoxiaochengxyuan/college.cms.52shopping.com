@@ -197,10 +197,15 @@ abstract class BaseDao {
 	/**
 	 * 获取所有数据
 	 * @param string $select 要查询的数据列
+	 * @param array $order 排序规则
 	 * @return array 返回的数据
 	 */
-	public function listAll($select = '*') {
-		return $this->createQuery()->select($select)->from($this->tableName())->all(self::db());
+	public function listAll($select = '*', $order = null) {
+		$query = $this->createQuery()->select($select)->from($this->tableName());
+		if (!empty($order)) {
+			$query = $query->orderBy($order);
+		}
+		return $query->all(self::db());
 	}
 	
 	/**
@@ -208,10 +213,15 @@ abstract class BaseDao {
 	 * @param string $columnName 对应的列名
 	 * @param string $columnValue 对应的值
 	 * @param unknown $select 要查询的数据
+	 * @param array $order 排序规则
 	 * @return array
 	 */
-	public function listByColumn($columnName, $columnValue, $select = '*') {
-		return $this->createQuery()->select($select)->from($this->tableName())->where("{$columnName}=:{$columnName}", [":{$columnName}" => $columnValue])->all(self::db());
+	public function listByColumn($columnName, $columnValue, $select = '*', $order = null) {
+		$query = $this->createQuery()->select($select)->from($this->tableName())->where("{$columnName}=:{$columnName}", [":{$columnName}" => $columnValue]);
+		if (!empty($order)) {
+			$query = $query->orderBy($order);
+		}
+		return $query->all(self::db());
 	}
 	
 	/**
@@ -219,10 +229,15 @@ abstract class BaseDao {
 	 * @param string $columnName 对应的列名
 	 * @param string $columnValue 对应的值
 	 * @param unknow $select 要查询的列
+	 * @param array $order 排序规则
 	 * @return array
 	 */
-	public function colomnByColumn($columnName, $columnValue, $select) {
-		return $this->createQuery()->select($select)->from($this->tableName())->where("{$columnName}=:{$columnName}", [":{$columnName}" => $columnValue])->column(self::db());
+	public function colomnByColumn($columnName, $columnValue, $select, $order = null) {
+		$query = $this->createQuery()->select($select)->from($this->tableName())->where("{$columnName}=:{$columnName}", [":{$columnName}" => $columnValue]);
+		if (!empty($order)) {
+			$query = $query->orderBy($order);
+		}
+		return $query->column(self::db());
 	}
 	
 	/**
@@ -240,15 +255,19 @@ abstract class BaseDao {
 	 * 分页获取数据
 	 * @param Pagination $pagination 对应分页
 	 * @param string $select 要查询的数据
+	 * @param array $order 排序规则
 	 * @return array
 	 */
-	public function listByPage(Pagination $pagination, $select = '*') {
-		return $this->createQuery()
+	public function listByPage(Pagination $pagination, $select = '*', $order = null) {
+		$query = $this->createQuery()
 			->select($select)
 			->from($this->tableName())
 			->offset($pagination->getOffset())
-			->limit($pagination->getLimit())
-			->all(self::db());
+			->limit($pagination->getLimit());
+		if (!empty($order)) {
+			$query = $query->orderBy($order);
+		}
+		return $query->all(self::db());;
 	}
 	
 	/**
@@ -267,16 +286,20 @@ abstract class BaseDao {
 	 * @param string $columnName 对应的列名称
 	 * @param string $columnValue 对应的列值
 	 * @param string $select 要查询的字段
+	 * @param array $order 排序规则
 	 * @return array 返回的数据
 	 */
-	public function pageByColumn(Pagination $pagination, $columnName, $columnValue, $select = '*') {
-		return $this->createQuery()
+	public function pageByColumn(Pagination $pagination, $columnName, $columnValue, $select = '*', $order = null) {
+		$query = $this->createQuery()
 			->select($select)
 			->from($this->tableName())
 			->where("{$columnName}=:{$columnName}", [":{$columnName}" => $columnValue])
 			->offset($pagination->getOffset())
-			->limit($pagination->getLimit())
-			->all(self::db());
+			->limit($pagination->getLimit());
+		if (!empty($order)) {
+			$query = $query->orderBy($order);
+		}
+		return $query->all(self::db());
 	}
 	
 	/**

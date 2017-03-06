@@ -23,11 +23,15 @@ use yii\helpers\Html;
 			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
 		<style type="text/css">
-		#vimg:HOVER {
-			cursor: pointer;
+		div.login-input {
+			margin: 6px 0;
 		}
-		#vimg {
+		div.login-err {
 			border: 1px solid #ccc;
+			padding: 4px 3px;
+			background: #DA4453;
+			color: white;
+			border-radius: 6px;
 		}
 		</style>
 	</head>
@@ -37,10 +41,14 @@ use yii\helpers\Html;
 				<?php $form=ActiveForm::begin(['options' => ['class' => 'form-login']])?>
 					<h2 class="form-login-heading">大学管理员登录</h2>
 					<div class="login-wrap">
-						<?=Html::textInput('CollegeAdminForm[username]', $collegeAdminForm->username, ['class' => 'form-control', 'placeholder' => '用户名'])?><br/>
-						<?=Html::passwordInput('CollegeAdminForm[password]', $collegeAdminForm->password, ['class' => 'form-control', 'placeholder' => '密码'])?><br/>
-						<?=Html::textInput('CollegeAdminForm[verify]', $collegeAdminForm->verify, ['class' => 'form-control', 'placeholder' => '验证码'])?><br/>
-						<img onclick="changeVerify();" id="vimg" alt="验证码,点击刷新" src="<?=Yii::$app->urlManager->createUrl(['common/verify', 'len' => 5, 'iw' => 290, 'ih' => 30])?>"><br/><br/>
+						<div class="login-input" style="margin-top: 0;"><?=Html::textInput('CollegeAdminForm[username]', $collegeAdminForm->username, ['class' => 'form-control', 'placeholder' => '用户名'])?></div>
+						<?php if ($collegeAdminForm->hasErrors('username')):?>
+							<div class="login-input login-err"><?=Html::error($collegeAdminForm, 'username')?></div>
+						<?php endif;?>
+						<div class="login-input"><?=Html::passwordInput('CollegeAdminForm[password]', $collegeAdminForm->password, ['class' => 'form-control', 'placeholder' => '密码'])?></div>
+						<?php if ($collegeAdminForm->hasErrors('password')):?>
+							<div class="login-input login-err"><?=Html::error($collegeAdminForm, 'password')?></div>
+						<?php endif;?>
 						<button class="btn btn-theme btn-block" type="submit">
 							<i class="fa fa-lock"></i> 登录
 						</button>

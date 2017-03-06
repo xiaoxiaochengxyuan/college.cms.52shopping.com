@@ -4,6 +4,7 @@ use app\base\BaseDao;
 use yii\helpers\Json;
 use app\utils\StringUtil;
 use yii\web\Cookie;
+use yii\base\Exception;
 /**
  * 大学管理员Dao
  * @author xiawei
@@ -81,7 +82,7 @@ class CollegeAdmin extends BaseDao {
 				if (empty($field)) {
 					return $collegeAdmin;
 				}
-				if (isset($collegeAdmin[$field])) {
+				if (!isset($collegeAdmin[$field])) {
 					return null;
 				}
 				return $collegeAdmin[$field];
@@ -97,5 +98,36 @@ class CollegeAdmin extends BaseDao {
 	 */
 	public static function logout() {
 		\Yii::$app->response->getCookies()->remove(self::COLLEGE_ADMIN_COOKIE_KEY);
+	}
+	
+	
+	/**
+	 * 修改当前登录用户密码
+	 * @param string $password 要修改成的密码
+	 * @throws Exception 没有用户登录抛出异常
+	 * @return number 影响的行数
+	 */
+	public function chgLoginPasswd($password) {
+		if (!self::isLogin()) {
+			throw new Exception('没有登录用户');
+		} else {
+			$currentLoginId = self::loginInfo('id');
+			$salt = \Yii::$app->getSecurity()->generateRandomString(8);
+			return parent::update($currentLoginId, ['salt' => $salt, 'password' => StringUtil::genPassword($password, $salt)]);
+		}
+	}
+	
+	/**
+	 * 直接从数据库获取当前登录的用户信息
+	 * @throws Exception
+	 * @return array
+	 */
+	public function getCurrentLogin() {
+		if (!self::isLogin()) {
+			throw new Exception('没有登录用户');
+		}
+		$currentLoginId = self::loginInfo('id');
+		$collegeAdmin = parent::get($currentLoginId);
+		return $collegeAdmin;
 	}
 }

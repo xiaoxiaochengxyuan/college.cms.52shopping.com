@@ -22,10 +22,16 @@ class CollegeAdminForm extends Model {
 	public $password = null;
 	
 	/**
-	 * 验证码
-	 * @var unknown
+	 * 新密码
+	 * @var string
 	 */
-	public $verify = null;
+	public $newPassword = null;
+	
+	/**
+	 * 重复密码
+	 * @var string
+	 */
+	public $rePassword = null;
 	
 	/**
 	 * {@inheritDoc}
@@ -34,8 +40,9 @@ class CollegeAdminForm extends Model {
 	public function rules() {
 		return [
 			['username', 'required', 'on' => ['login'], 'message' => '用户名必须填写'],
-			['password', 'required', 'on' => ['login'], 'message' => '密码必须填写'],
-			['verify', 'checkVerify', 'on' => ['login'], 'skipOnEmpty' => false],
+			['password', 'checkPassword', 'on' => ['login', 'chgpasswd'], 'skipOnEmpty' => false],
+			['newPassword', 'checkNewPassword', 'on' => ['chgpasswd'], 'skipOnEmpty' => false],
+			['rePassword', 'compare', 'compareAttribute' => 'newPassword', 'on' => ['chgpasswd'], 'skipOnEmpty' => false, 'message' => '重复密码和新密码不同']
 		];
 	}
 	
@@ -57,10 +64,33 @@ class CollegeAdminForm extends Model {
 		return !$this->hasErrors();
 	}
 	
+	/**
+	 * 检查密码
+	 */
+	public function checkPassword() {
+		$passwordName = '密码';
+		if ($this->getScenario() == 'chgpasswd') {
+			$passwordName = '旧密码';
+		}
+		if (empty($this->password)) {
+			$this->addError('password', "{$passwordName}不能为空");
+		} elseif ($this->getScenario() == 'chgpasswd') {
+			$currentCollegeAdmin = CollegeAdmin::instance()->getCurrentLogin();
+			if ($currentCollegeAdmin['password'] != StringUtil::genPassword($this->password, $currentCollegeAdmin['salt'])) {
+				$this->addError('password', "{$passwordName}错误");
+			}
+		}
+	}
 	
-	public function checkVerify() {
-		if (empty($this->verify)) {
-			$this->addError('verify', '验证码不能为空');
+	
+	/**
+	 * 检查新密码
+	 */
+	public function checkNewPassword() {
+		if (empty($this->newPassword)) {
+			$this->addError('newPassword', '新密码错误');
+		} elseif ($this->newPassword == $this->password) {
+			$this->addError('newPassword', '新密码和旧密码相等');
 		}
 	}
 }
